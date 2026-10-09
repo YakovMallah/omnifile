@@ -10,7 +10,9 @@
     "build": "pnpm -r --filter \"./packages/*\" build",
     "dev": "pnpm --filter playground dev",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p playground/tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p playground/tsconfig.json && tsc --noEmit -p site/tsconfig.json",
+    "site": "pnpm --filter site dev",
+    "site:build": "pnpm --filter site build"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

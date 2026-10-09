@@ -1,5 +1,6 @@
 packages:
   - "packages/*"
   - "playground"
+  - "site"
 onlyBuiltDependencies:
   - esbuild

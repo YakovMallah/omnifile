@@ -100,6 +100,52 @@ importers:
         specifier: ^8.3.0
         version: 8.3.4(esbuild@0.27.7)
 
+  site:
+    dependencies:
+      '@fontsource-variable/bricolage-grotesque':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource/ibm-plex-mono':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource/ibm-plex-sans':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@omnifile/core':
+        specifier: workspace:^
+        version: link:../packages/core
+      '@omnifile/image':
+        specifier: workspace:^
+        version: link:../packages/image
+      '@omnifile/media':
+        specifier: workspace:^
+        version: link:../packages/media
+      '@omnifile/pdf':
+        specifier: workspace:^
+        version: link:../packages/pdf
+      '@omnifile/react':
+        specifier: workspace:^
+        version: link:../packages/react
+      '@omnifile/text':
+        specifier: workspace:^
+        version: link:../packages/text
+      pdfjs-dist:
+        specifier: ^6.4.0
+        version: 6.4.299
+      react:
+        specifier: ^19.0.0
+        version: 19.3.0
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.3.0(react@19.3.0)
+    devDependencies:
+      '@vitejs/plugin-react':
+        specifier: ^6.1.0
+        version: 6.1.2(vite@8.3.4(esbuild@0.27.7))
+      vite:
+        specifier: ^8.3.0
+        version: 8.3.4(esbuild@0.27.7)
+
 packages:
 
   '@esbuild/aix-ppc64@0.27.7':
@@ -257,6 +303,15 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource-variable/bricolage-grotesque@5.3.0':
+    resolution: {integrity: sha512-TLi9Q4hJjS2UvoTMRSS2nHu6c4R56lAw60NR9QYtVRCHn0XtsFpiEhNffZ8Glsoxu6wEEwLKBP8lb94J52PNBA==}
+
+  '@fontsource/ibm-plex-mono@5.3.0':
+    resolution: {integrity: sha512-eTgnZjZEGk1QtD3ZstF+Vclo2HLAni8YMy34/DxllwZvyz1lR/1RF/xTiAquOBO7MvqBx8D2Ig2WCPMVfdZu7Q==}
+
+  '@fontsource/ibm-plex-sans@5.3.0':
+    resolution: {integrity: sha512-CbE4CbbEEZJX860XyUiRpsksXIQR8Rp2XDva2VO53NJox9tVNtusrysd2x5YkUEY3ErQ66W1IiiQL8/wihhw5w==}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -1130,6 +1185,12 @@ snapshots:
 
   '@esbuild/win32-x64@0.27.7':
     optional: true
+
+  '@fontsource-variable/bricolage-grotesque@5.3.0': {}
+
+  '@fontsource/ibm-plex-mono@5.3.0': {}
+
+  '@fontsource/ibm-plex-sans@5.3.0': {}
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:

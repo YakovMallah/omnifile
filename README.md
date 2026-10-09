@@ -3,6 +3,8 @@
 View any file in the browser, entirely on the client. No upload, no server,
 no third-party viewer.
 
+**[See it running: yakovmallah.github.io/omnifile](https://yakovmallah.github.io/omnifile/)**
+
 > **Status: early.** Phase 1 of the [plan](docs/PLAN.md) is in place. Nothing
 > is published to npm yet.
 
@@ -97,6 +99,7 @@ Later plugins in the list win, so you can override a built-in renderer.
 ```sh
 pnpm install
 pnpm dev         # playground at http://localhost:5173
+pnpm site        # the project site, deployed to GitHub Pages from main
 pnpm test
 pnpm typecheck
 pnpm build
