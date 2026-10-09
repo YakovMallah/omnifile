@@ -118,6 +118,33 @@ Editing is parked: the priority is viewing as many formats as possible.
 - Sandbox: a prebuilt single frame page for hosts whose CSP forbids `srcdoc`
   scripts; fonts from the host page are not available inside the frame.
 
+## LibreOffice WebAssembly spike (2026-10-09)
+
+Tried `@matbee/libreoffice-converter` 2.7.2 (MPL-2.0, 37 releases since
+December 2025), a prebuilt headless LibreOffice, converting files to PDF.
+
+- **It works.** A legacy `.doc`, a `.pptx` and an `.xlsx` converted to PDF in
+  Node and in headless Chromium. In the browser, with files served locally:
+  about 2.5 s to start, 1.3 s for the first conversion, 0.2 s for a repeat.
+- **Size.** 147 MB of WebAssembly plus 100 MB of data; about 88 MB with fast
+  gzip. Opt-in only, and needs caching and a progress display.
+- **Host requirement.** The page must be cross-origin isolated
+  (`Cross-Origin-Opener-Policy: same-origin` and
+  `Cross-Origin-Embedder-Policy: require-corp`). Without those headers it
+  fails to start. GitHub Pages cannot set headers, so the project site would
+  need a service-worker workaround to demo it.
+- **Sandbox.** It runs inside our sandbox frame (opaque origin, no network)
+  when the frame has `allow="cross-origin-isolated"`, with the files handed in
+  as blobs. Two costs: the frame's policy must allow `'unsafe-eval'` and
+  `'wasm-unsafe-eval'` for this plugin, and 3 of 8 sandboxed runs hung while
+  loading the document (0 of 5 unsandboxed runs did). That hang is unexplained
+  and has to be solved before shipping.
+- Only tested in Chromium. Fidelity was checked on our small generated
+  samples, not on real-world documents.
+
+Not yet done: the plugin itself, the hang, Firefox and Safari, brotli sizes,
+fonts beyond the bundled Latin/Arabic/Hebrew set.
+
 ## What editing will cost
 
 - Text, code, Markdown, CSV: easy.
