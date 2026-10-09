@@ -1,0 +1,78 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.app[data-dragging] main {
+  outline: 3px dashed #2563eb;
+  outline-offset: -6px;
+}
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+}
+h1 {
+  font-size: 18px;
+  margin: 0 8px 0 0;
+}
+.pick {
+  background: #2563eb;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.pick input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.pick:focus-within {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+.hint,
+output {
+  font-size: 13px;
+  opacity: 0.7;
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+nav button {
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+nav button[aria-pressed='true'] {
+  background: color-mix(in srgb, currentColor 14%, transparent);
+}
+output {
+  margin-left: auto;
+}
+main {
+  flex: 1;
+  min-height: 0;
+}

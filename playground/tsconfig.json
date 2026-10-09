@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["vite/client"],
+    "paths": {
+      "@omnifile/react": ["../packages/react/src/index.tsx"],
+      "@omnifile/*": ["../packages/*/src/index.ts"]
+    }
+  },
+  "include": ["src"]
+}

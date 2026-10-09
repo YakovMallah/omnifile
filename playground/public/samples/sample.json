@@ -1,0 +1,5 @@
+{
+  "name": "omnifile",
+  "formats": ["pdf", "images", "media", "text"],
+  "editing": false
+}
