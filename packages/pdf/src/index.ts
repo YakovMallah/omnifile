@@ -20,5 +20,6 @@ export function pdf(options: PdfOptions = {}): OmniPlugin<PdfModel> {
     id: 'omnifile/pdf',
     formats: ['pdf'],
     load: () => import('./impl').then((module) => module.createImplementation(options)),
+    frame: { url: () => new URL('./frame.js', import.meta.url).href, options: {} },
   });
 }

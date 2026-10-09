@@ -33,61 +33,90 @@ happens in the browser.
 - **The shell has a `mode`.** `view` today; `edit` falls back to view when a
   plugin cannot edit.
 
+Editing is parked: the priority is viewing as many formats as possible.
+
 ### Safety
 
 - File contents are never interpreted as markup: text is set with
-  `textContent`, SVG is shown through `<img>`.
-- Planned: HTML preview in a sandboxed iframe, sanitising of any HTML a
-  renderer generates.
+  `textContent`, SVG is shown through `<img>`, generated HTML (Markdown,
+  email) goes through DOMPurify.
+- HTML files and email bodies are shown in sandboxed frames with scripts off
+  and the network blocked.
+- **Sandbox mode** (`@omnifile/sandbox`): `sandboxed(plugins)` runs each
+  plugin's parse and render inside `<iframe sandbox="allow-scripts">` with an
+  origin of its own and a Content Security Policy that allows no connections
+  and only nonce-bearing scripts. The toolbar stays in the host; the two talk
+  over a `MessageChannel`. Each plugin ships a self-contained `dist/frame.js`
+  that the host fetches as text and the frame imports from a blob, because a
+  frame with an opaque origin cannot import the host's script files without
+  CORS headers.
+- Known gaps: source loading and format detection run in the host; a
+  compromised frame can still navigate itself (the platform cannot forbid
+  it); a host page with a strict CSP must allow the frame.
 
 ## Format strategy
 
-| Format | Approach | Difficulty | Status |
-|---|---|---|---|
-| PDF | pdf.js | Easy | Done (no text layer or search yet) |
-| Images | Native elements | Easy | Done |
-| HEIC, TIFF | WASM/JS decoders | Easy | Planned |
-| Video, audio | Native elements | Easy | Done |
-| Text, code, JSON, CSV | Plain text | Easy | Done (no highlighting yet) |
-| Markdown | Rendered view | Easy | Planned (shown as source today) |
-| DOCX | docx-preview (layout) or mammoth (clean HTML) | Medium | Phase 2 |
-| XLSX, XLS, CSV grid | SheetJS + our own virtualised grid | Medium | Phase 2 |
-| PPTX | No solid library; our own renderer | Hard | Phase 3 |
-| Legacy DOC, PPT | LibreOffice compiled to WASM | Hard | Phase 4 |
+| Format | Approach | Status |
+|---|---|---|
+| PDF | pdf.js (legacy build) | Done (no text layer or search yet) |
+| Images | Native elements | Done |
+| Video, audio | Native elements | Done (not yet exercised with real media files) |
+| Text | Plain text | Done |
+| Code | highlight.js | Done |
+| Markdown | marked + DOMPurify, rendered/source switch | Done |
+| HTML | Sandboxed frame, preview/source switch | Done |
+| DOCX | docx-preview | Done |
+| XLSX, CSV, TSV | Own reader (fflate + DOMParser) and virtualised grid | Done (values and number formats; no cell styling, charts or images) |
+| PPTX | PptxViewJS (canvas) | Done (no animations or video) |
+| Email (.eml) | postal-mime | Done |
+| ZIP | Own central-directory reader | Done (listing only) |
+| Fonts | FontFace API | Done |
+| Anything else | Hex view fallback | Done |
+| HEIC, TIFF | Decoders | Planned. libheif-js is LGPL-3.0, so HEIC needs a licence decision |
+| ODT, ODS, ODP, EPUB, RTF | Own readers or libraries | Planned; recognised today |
+| Legacy DOC, XLS, PPT, MSG | LibreOffice compiled to WASM, opt-in | Planned |
+| Notebooks (.ipynb), 3D models, PSD | To evaluate | Ideas |
 
-The library picks for phase 2 onward are from memory. Check each one's
-maintenance status and licence before committing to it.
+### Library decisions (checked on npm, 2026-10-09)
 
-### Office fidelity
-
-1. **Light JS libraries**: small and fast, imperfect on complex layouts, weak
-   on PPTX and legacy formats.
-2. **LibreOffice WASM**: near-desktop fidelity and real editing for every
-   Office format, at the cost of a download in the tens of megabytes.
-
-The plan is to build on 1 and offer 2 as an optional heavy plugin. It is also
-the realistic route to full Office editing.
+- **docx-preview** 0.4.1: released September 2026, Apache-2.0. Adopted.
+- **SheetJS (`xlsx` on npm)**: last npm release was 2022; current versions
+  are only distributed from its own CDN. Not adopted; the spreadsheet reader
+  is our own, which also keeps the plugin small (26 KB as a frame bundle).
+- **PptxViewJS** 1.1.9: released March 2026, MIT. Adopted, with caveats: it
+  needs JSZip and Chart.js, writes globals, and falls back to loading JSZip
+  from a CDN unless it finds one (the plugin hands it the bundled copy so
+  that never happens). In sandbox mode all of this is confined to the frame.
+  Worth revisiting if it stalls; a renderer of our own is the alternative.
+- **highlight.js**, **marked**, **DOMPurify**, **postal-mime**, **fflate**:
+  all released in 2026.
+- Not adopted: heic2any (2023), epub.js (2022), rtf.js (2022), utif (2019).
 
 ## Phases
 
-1. **Core, detection, plugin API, shell, PDF, images, media, text.** Done.
-2. DOCX and spreadsheets.
-3. PPTX.
-4. Optional LibreOffice WASM plugin, search, theming and accessibility polish.
+1. Core, detection, plugin API, shell, PDF, images, media, text. **Done.**
+2. Word, spreadsheets, PowerPoint, Markdown, code, HTML, email, ZIP, fonts,
+   hex fallback, sandbox mode. **Done.**
+3. More formats: HEIC/TIFF, OpenDocument, EPUB, RTF, notebooks; optional
+   LibreOffice WASM plugin for legacy Office.
+4. Depth: PDF text layer and search, page navigation, spreadsheet styling,
+   find-in-file, accessibility polish.
+5. Editing. Parked until viewing is broad and solid.
 
-### Left over from phase 1
+### Open items
 
-- PDF text layer (selection, search), page navigation in the toolbar,
-  password-protected PDFs.
-- Syntax highlighting and rendered Markdown.
-- Virtualised rendering for very large text files (currently truncated at
-  2 million characters).
-- Parsing in Web Workers for formats that need it. Only PDF parses off the
-  main thread today, and only when `workerSrc` is given.
-- Toolbar extension points for plugins.
-- Tests for the DOM side (mount, plugins). Today's unit tests cover detection
-  and plugin selection; rendering was checked by hand in Chromium, and the
-  media plugin has not been exercised with a real video or audio file.
+- Before publishing: check that third-party licence notices survive in the
+  minified `frame.js` bundles, and register the `omnifile` npm organisation.
+- XLSX and Markdown parse on the frame's (or page's) main thread; very large
+  files will stall it. Move to workers or incremental parsing.
+- Text files over 2 million characters are truncated; needs virtualisation.
+- DOM-level tests. Unit tests cover detection, plugin selection, CSV, number
+  formats, the ZIP reader, font metadata and the sandbox's policy; rendering
+  is checked by hand in Chromium, in both direct and sandboxed modes. An
+  automated browser suite in CI is the next step.
+- Toolbar extension points for plugins beyond zoom and views.
+- Sandbox: a prebuilt single frame page for hosts whose CSP forbids `srcdoc`
+  scripts; fonts from the host page are not available inside the frame.
 
 ## What editing will cost
 

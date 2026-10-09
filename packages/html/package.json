@@ -1,0 +1,34 @@
+{
+  "name": "@omnifile/html",
+  "version": "0.0.0",
+  "description": "omnifile plugin: HTML pages previewed in a sandboxed frame.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YakovMallah/omnifile.git",
+    "directory": "packages/html"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./frame": "./dist/frame.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsup"
+  },
+  "dependencies": {
+    "@omnifile/core": "workspace:^"
+  }
+}

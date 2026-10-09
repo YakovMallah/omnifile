@@ -1,0 +1,36 @@
+{
+  "name": "@omnifile/email",
+  "version": "0.0.0",
+  "description": "omnifile plugin: email messages (.eml).",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YakovMallah/omnifile.git",
+    "directory": "packages/email"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./frame": "./dist/frame.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsup"
+  },
+  "dependencies": {
+    "@omnifile/core": "workspace:^",
+    "dompurify": "^3.4.0",
+    "postal-mime": "^4.0.0"
+  }
+}

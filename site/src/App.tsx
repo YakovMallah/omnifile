@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState, type DragEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type DragEvent } from 'react';
 import { mount } from '@omnifile/core';
 import { OmniFile, type LoadedFile, type OmniSource } from '@omnifile/react';
 import { Code } from './Code';
 import { explain } from './explain';
 import { plugins, REPO_URL, sampleUrl } from './plugins';
+import { PROBE_SOURCE, probePlugins } from './probe';
 
 export function App() {
   return (
@@ -16,6 +17,7 @@ export function App() {
         <nav aria-label="Sections">
           <a href="#usage">Usage</a>
           <a href="#formats">Formats</a>
+          <a href="#isolation">Isolation</a>
           <a href="#design">Design</a>
           <a href="#install">Install</a>
           <a href={REPO_URL}>GitHub</a>
@@ -25,6 +27,7 @@ export function App() {
         <Hero />
         <Usage />
         <Formats />
+        <Isolation />
         <Design />
         <Install />
       </main>
@@ -47,12 +50,19 @@ interface Sample {
 
 const SAMPLES: Sample[] = [
   { label: 'PDF', file: 'sample.pdf' },
-  { label: 'PNG', file: 'sample.png' },
-  { label: 'SVG', file: 'sample.svg' },
+  { label: 'Word', file: 'sample.docx' },
+  { label: 'Excel', file: 'sample.xlsx' },
+  { label: 'PowerPoint', file: 'sample.pptx' },
+  { label: 'CSV', file: 'sample.csv' },
   { label: 'Markdown', file: 'sample.md' },
-  { label: 'JSON', file: 'sample.json' },
+  { label: 'Python', file: 'sample.py' },
+  { label: 'HTML', file: 'sample.html' },
+  { label: 'Image', file: 'sample.png' },
+  { label: 'Email', file: 'sample.eml' },
+  { label: 'ZIP', file: 'sample.zip' },
+  { label: 'Font', file: 'sample.woff2' },
+  { label: 'Unknown binary', file: 'sample.bin' },
   { label: 'A PDF named report.txt', file: 'sample.pdf', name: 'report.txt' },
-  { label: 'Word, no renderer yet', file: 'sample.docx' },
 ];
 
 function Hero() {
@@ -78,9 +88,10 @@ function Hero() {
       <div className="hero-copy">
         <h1>Open any file in the browser. Send it nowhere.</h1>
         <p className="lede">
-          omnifile is a file viewer that runs entirely in the page. PDFs, images, video, audio and
-          text render from a URL or a dropped file, with nothing uploaded to anyone&rsquo;s server.
-          Use it from React or from plain HTML.
+          omnifile is a file viewer that runs entirely in the page. PDFs, Word, Excel and
+          PowerPoint files, images, video, email, code and more render from a URL or a dropped
+          file, with nothing uploaded to anyone&rsquo;s server. Use it from React or from plain
+          HTML.
         </p>
         <div className="actions">
           <a className="button button-solid" href="#install">
@@ -191,16 +202,17 @@ type Theme = 'light' | 'dark';
 
 const DEMO_FILES = [
   { label: 'PDF', file: 'sample.pdf' },
-  { label: 'Image', file: 'sample.png' },
-  { label: 'Text', file: 'sample.md' },
+  { label: 'Excel', file: 'sample.xlsx' },
+  { label: 'Slides', file: 'sample.pptx' },
+  { label: 'Markdown', file: 'sample.md' },
 ];
 
 const reactSnippet = (file: string, theme: Theme) => `import { OmniFile } from '@omnifile/react';
-import { pdf } from '@omnifile/pdf';
-import { image } from '@omnifile/image';
-import { text } from '@omnifile/text';
+import { allPlugins } from '@omnifile/all';
+import { sandboxed } from '@omnifile/sandbox';
 
-const plugins = [pdf(), image(), text()];
+// Every format, each drawn inside an isolated frame.
+const plugins = sandboxed(allPlugins());
 
 export function Preview() {
   return (
@@ -217,13 +229,12 @@ const htmlSnippet = (file: string, theme: Theme) => `<div id="viewer" style="hei
 
 <script type="module">
   import { mount } from '@omnifile/core';
-  import { pdf } from '@omnifile/pdf';
-  import { image } from '@omnifile/image';
-  import { text } from '@omnifile/text';
+  import { allPlugins } from '@omnifile/all';
+  import { sandboxed } from '@omnifile/sandbox';
 
   const viewer = mount(document.getElementById('viewer'), {
     source: '/files/${file}',
-    plugins: [pdf(), image(), text()],
+    plugins: sandboxed(allPlugins()),
     theme: '${theme}',
   });
 
@@ -289,7 +300,8 @@ function Usage() {
       </div>
       <p className="footnote">
         The plain HTML example imports packages by name, so it needs a bundler such as Vite or an
-        import map.
+        import map. To ship fewer formats, list the plugins you want in place of{' '}
+        <code>allPlugins()</code>.
       </p>
     </section>
   );
@@ -332,14 +344,22 @@ function Segmented<T extends string>(props: {
 
 const FORMAT_ROWS: { family: string; types: string; how: string; ready: boolean }[] = [
   { family: 'PDF', types: 'pdf', how: 'pdf.js, pages drawn as you scroll, zoom', ready: true },
+  { family: 'Word', types: 'docx', how: 'Laid out as pages, with tables, lists, images, headers and footers', ready: true },
+  { family: 'Spreadsheets', types: 'xlsx, csv, tsv', how: 'A scrolling grid with sheet tabs, dates and number formats', ready: true },
+  { family: 'PowerPoint', types: 'pptx', how: 'Each slide drawn with its text, shapes, images, tables and charts', ready: true },
   { family: 'Images', types: 'png, jpeg, gif, webp, avif, bmp, ico, svg', how: 'The browser’s own decoders, zoom', ready: true },
   { family: 'Video and audio', types: 'mp4, webm, mov, mkv, mp3, wav, ogg, m4a, flac', how: 'The browser’s own player', ready: true },
-  { family: 'Text and code', types: 'txt, md, json, csv, html, xml, yaml, source files', how: 'Plain text with line numbers', ready: true },
-  { family: 'Rendered Markdown, syntax colours', types: 'md and source files', how: 'A richer view of the text formats', ready: false },
-  { family: 'Word', types: 'docx', how: 'Rendered in the page, no online viewer', ready: false },
-  { family: 'Spreadsheets', types: 'xlsx, xls, csv as a grid', how: 'A virtualised grid', ready: false },
-  { family: 'PowerPoint', types: 'pptx', how: 'A renderer of our own', ready: false },
-  { family: 'Legacy Office', types: 'doc, ppt', how: 'LibreOffice compiled to WebAssembly, as an opt-in plugin', ready: false },
+  { family: 'Markdown', types: 'md', how: 'Rendered, with a switch to the source', ready: true },
+  { family: 'Code', types: 'js, ts, py, go, rs, java, json, yaml, css and more', how: 'Syntax colours and line numbers', ready: true },
+  { family: 'HTML', types: 'html', how: 'Previewed with scripts off, with a switch to the source', ready: true },
+  { family: 'Email', types: 'eml', how: 'Headers, body and attachments; remote images blocked', ready: true },
+  { family: 'ZIP archives', types: 'zip', how: 'A list of the files inside', ready: true },
+  { family: 'Fonts', types: 'ttf, otf, woff, woff2', how: 'A specimen you can type into', ready: true },
+  { family: 'Plain text', types: 'txt, log and anything text-like', how: 'Text with line numbers', ready: true },
+  { family: 'Everything else', types: 'any file', how: 'A hex view of the raw bytes', ready: true },
+  { family: 'HEIC and TIFF images', types: 'heic, tif', how: 'Decoded in the page', ready: false },
+  { family: 'OpenDocument and EPUB', types: 'odt, ods, odp, epub', how: 'Recognised today, shown as hex until they have renderers', ready: false },
+  { family: 'Legacy Office', types: 'doc, xls, ppt', how: 'LibreOffice compiled to WebAssembly, as an opt-in plugin', ready: false },
 ];
 
 function Formats() {
@@ -348,8 +368,9 @@ function Formats() {
       <div className="section-head">
         <h2>What it opens</h2>
         <p>
-          The project is young. The first four rows work now; the rest are planned, and until they
-          land those files show a clear &ldquo;no preview&rdquo; state with a download button.
+          Each kind is its own small package, loaded only when a file of that kind is opened. Office
+          files are drawn by open-source libraries in the page, so complex layouts can differ from
+          the desktop apps. Anything without a renderer still opens, as a hex view.
         </p>
       </div>
       <div className="table-wrap">
@@ -378,6 +399,60 @@ function Formats() {
             ))}
           </tbody>
         </table>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------- isolation */
+
+function Isolation() {
+  const plugins = useMemo(probePlugins, []);
+
+  return (
+    <section className="section" id="isolation">
+      <div className="section-head">
+        <h2>A hostile file stays in its box</h2>
+        <p>
+          Parsers have bugs, and a crafted file can turn one into code running in your page. With{' '}
+          <code>sandboxed()</code>, every file is parsed and drawn inside a frame that has an origin
+          of its own and no network access. Only the toolbar lives in your page; the two talk over
+          a private message channel.
+        </p>
+      </div>
+
+      <div className="isolation-grid">
+        <figure className="probe">
+          <div className="probe-live">
+            <OmniFile source={PROBE_SOURCE} name="probe.txt" plugins={plugins} toolbar={false} theme="light" />
+          </div>
+          <figcaption>
+            This panel is live. It is a sandboxed viewer running a test renderer that tries each of
+            these when it loads, the way code smuggled in through a file would. In an ordinary
+            page, every one of them succeeds.
+          </figcaption>
+        </figure>
+
+        <dl className="principles isolation-notes">
+          <div>
+            <dt>How it is enforced</dt>
+            <dd>
+              The frame is sandboxed with scripts as its only permission, and carries a Content
+              Security Policy that allows no connections and only scripts bearing a one-time
+              token. Links and attachment downloads are passed to your page, which acts on them
+              only after a real click.
+            </dd>
+          </div>
+          <div>
+            <dt>What it does not cover</dt>
+            <dd>
+              It contains bugs in the libraries that read files, not bugs in the browser itself.
+              Loading a file from a URL and identifying its type still happen in your page, in a
+              few hundred lines that only look at bytes. A page with its own strict Content
+              Security Policy may need to allow the frame.
+            </dd>
+          </div>
+        </dl>
       </div>
     </section>
   );
@@ -422,11 +497,11 @@ function Design() {
           <dt>You ship only the formats you use</dt>
           <dd>
             Each format is its own package, and its code sits behind a dynamic import. Someone who
-            only ever opens images never downloads the PDF engine.
+            only ever opens images never downloads the PDF or PowerPoint engines.
           </dd>
         </div>
         <div>
-          <dt>Editing can follow</dt>
+          <dt>Editing can follow later</dt>
           <dd>
             Every plugin turns bytes into a model and the model into the page, and keeps the
             original bytes untouched. Saving a model back to a file is a reserved step in the
@@ -455,7 +530,7 @@ cd omnifile
 pnpm install
 pnpm dev`;
 
-const npmSnippet = `npm install @omnifile/react @omnifile/pdf @omnifile/image @omnifile/text`;
+const npmSnippet = `npm install @omnifile/react @omnifile/all @omnifile/sandbox`;
 
 function Install() {
   return (

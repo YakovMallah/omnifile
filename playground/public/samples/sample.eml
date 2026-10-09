@@ -1,0 +1,49 @@
+From: Dana Cohen <dana@example.com>
+To: Yakov Mallah <yakov@example.com>
+Cc: Team <team@example.com>
+Subject: Notes from today's review
+Date: Fri, 09 Oct 2026 16:05:00 +0300
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="outer"
+
+--outer
+Content-Type: multipart/alternative; boundary="inner"
+
+--inner
+Content-Type: text/plain; charset=utf-8
+
+Hi Yakov,
+
+Thanks for the walkthrough. Two notes are attached.
+
+Dana
+
+--inner
+Content-Type: text/html; charset=utf-8
+
+<html><body>
+<p>Hi Yakov,</p>
+<p>Thanks for the walkthrough. <b>Two notes</b> are attached, and here is the short version:</p>
+<ul><li>The viewer opened every file we tried.</li><li>Spreadsheets were the favourite.</li></ul>
+<p>Dana</p>
+<img src="https://tracker.example.com/pixel.gif" width="1" height="1" alt="">
+<script>document.body.innerHTML = 'script ran';</script>
+</body></html>
+
+--inner--
+--outer
+Content-Type: text/plain; name="notes.txt"
+Content-Disposition: attachment; filename="notes.txt"
+
+1. Ship the spreadsheet grid.
+2. Write the sandbox docs.
+
+--outer
+Content-Type: text/csv; name="scores.csv"
+Content-Disposition: attachment; filename="scores.csv"
+
+format,score
+pdf,9
+xlsx,8
+
+--outer--

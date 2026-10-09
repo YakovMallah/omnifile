@@ -1,11 +1,14 @@
-import { image } from '@omnifile/image';
-import { media } from '@omnifile/media';
-import { pdf } from '@omnifile/pdf';
-import { text } from '@omnifile/text';
-import workerSrc from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
+import { allPlugins } from '@omnifile/all';
+import { sandboxed } from '@omnifile/sandbox';
 
-/** One shared list, so every viewer on the page reuses the same plugins. */
-export const plugins = [image(), media(), text(), pdf({ workerSrc })];
+/**
+ * Every official plugin, each running inside an isolated frame. One shared
+ * list, so every viewer on the page reuses the same plugins.
+ */
+export const plugins = sandboxed(allPlugins());
+
+/** The same plugins without the sandbox, for the comparison on the page. */
+export const directPlugins = allPlugins();
 
 export const sampleUrl = (file: string) => `${import.meta.env.BASE_URL}samples/${file}`;
 

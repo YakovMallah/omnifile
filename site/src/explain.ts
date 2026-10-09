@@ -49,7 +49,7 @@ export function explain(file: LoadedFile): Explanation {
     case 'xlsx':
     case 'pptx': {
       const inside = { docx: 'word/document.xml', xlsx: 'xl/workbook.xml', pptx: 'ppt/presentation.xml' }[format.id];
-      return { start: 0, length: 4, text: `PK marks a ZIP archive, and it contains ${inside}: a ${format.label}.` };
+      return { start: 0, length: 4, text: `PK marks a ZIP archive, and it contains ${inside}, the main part of a Word, Excel or PowerPoint file.` };
     }
     case 'zip':
       return { start: 0, length: 4, text: 'PK marks a ZIP archive, with no Office document inside.' };
@@ -59,6 +59,12 @@ export function explain(file: LoadedFile): Explanation {
       return { start: 0, length: 0, text: 'Nothing recognisable in these bytes, so the file is offered as a download.' };
   }
 
+  if (format.id === 'eml') {
+    return { start: 0, length: 0, text: 'No signature: an email is text. The .eml label says it is a message.' };
+  }
+  if (format.category === 'font') {
+    return { start: 0, length: 4, text: `The first four bytes mark a ${format.label}.${mislabelled}` };
+  }
   if (format.category === 'text') {
     const kind =
       format.id === 'text'

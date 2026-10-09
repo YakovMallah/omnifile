@@ -18,5 +18,6 @@ export function text(): OmniPlugin<TextModel> {
     id: 'omnifile/text',
     formats: FORMATS,
     load: () => import('./impl').then((module) => module.implementation),
+    frame: { url: () => new URL('./frame.js', import.meta.url).href },
   });
 }

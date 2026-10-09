@@ -37,7 +37,8 @@ export function detectFormat(input: DetectInput): FormatInfo {
 const SIGNATURE_REQUIRED = new Set([
   'pdf', 'png', 'jpeg', 'gif', 'webp', 'avif', 'bmp', 'ico', 'heic', 'tiff', 'mp4', 'mov',
   'webm', 'mkv', 'wav', 'ogg', 'ogv', 'flac', 'm4a', 'zip', 'docx', 'xlsx', 'pptx', 'doc',
-  'xls', 'ppt',
+  'xls', 'ppt', 'odt', 'ods', 'odp', 'epub', 'ttf', 'otf', 'woff', 'woff2', 'gzip', 'tar', '7z',
+  'rar', 'rtf',
 ]);
 
 type Sniffed = 'zip' | 'ole' | 'ogg' | 'matroska' | 'iso-video' | string;
@@ -85,6 +86,20 @@ function sniffMagic(bytes: Uint8Array): Sniffed | undefined {
   // MP3s without an ID3 tag start with a bare frame sync, which is too short
   // to trust (a UTF-16 byte-order mark matches it), so those rely on the label.
 
+  if (head.startsWith('OTTO')) return 'otf';
+  if (head.startsWith('wOFF')) return 'woff';
+  if (head.startsWith('wOF2')) return 'woff2';
+  // TrueType: version 1.0 (or 'true'), then a plausible table count.
+  if (
+    (startsWith(bytes, [0x00, 0x01, 0x00, 0x00]) || head.startsWith('true')) &&
+    bytes.length >= 12 && bytes[4] === 0 && bytes[5]! > 0 && bytes[5]! <= 64
+  ) return 'ttf';
+  if (head.startsWith('{\\rtf')) return 'rtf';
+  if (startsWith(bytes, [0x1f, 0x8b, 0x08])) return 'gzip';
+  if (startsWith(bytes, [0x37, 0x7a, 0xbc, 0xaf, 0x27, 0x1c])) return '7z';
+  if (head.startsWith('Rar!\x1a\x07')) return 'rar';
+  if (bytes.length >= 262 && ascii(bytes, 257, 5) === 'ustar') return 'tar';
+
   if (startsWith(bytes, [0x50, 0x4b, 0x03, 0x04]) || startsWith(bytes, [0x50, 0x4b, 0x05, 0x06])) return 'zip';
   if (startsWith(bytes, [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1])) return 'ole';
 
@@ -101,7 +116,7 @@ function sniffMagic(bytes: Uint8Array): Sniffed | undefined {
 function refineContainer(sniffed: Sniffed, bytes: Uint8Array, hint: FormatInfo | undefined): FormatInfo {
   switch (sniffed) {
     case 'zip':
-      return getFormat(sniffOoxml(bytes) ?? (hint && ['docx', 'xlsx', 'pptx'].includes(hint.id) ? hint.id : 'zip'));
+      return getFormat(sniffZipKind(bytes) ?? (hint && ZIP_BASED.includes(hint.id) ? hint.id : 'zip'));
     case 'ole':
       // Legacy Office files are all OLE compound documents; only the label
       // distinguishes them without parsing the directory.
@@ -115,18 +130,50 @@ function refineContainer(sniffed: Sniffed, bytes: Uint8Array, hint: FormatInfo |
   }
 }
 
-/** OOXML files are ZIPs whose entry names reveal the application. */
-function sniffOoxml(bytes: Uint8Array): 'docx' | 'xlsx' | 'pptx' | undefined {
-  const window = 64 * 1024;
-  const chunks =
-    bytes.length <= window * 2
-      ? [bytes]
-      : [bytes.subarray(0, window), bytes.subarray(bytes.length - window)];
-  for (const chunk of chunks) {
-    const text = new TextDecoder('latin1').decode(chunk);
-    if (text.includes('word/document')) return 'docx';
-    if (text.includes('xl/workbook')) return 'xlsx';
-    if (text.includes('ppt/presentation')) return 'pptx';
+const ZIP_BASED = ['docx', 'xlsx', 'pptx', 'odt', 'ods', 'odp', 'epub'];
+
+/** Entry names from a ZIP's central directory, the index at its end. */
+function zipEntryNames(bytes: Uint8Array, limit = 4000): string[] {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let eocd = -1;
+  for (let offset = bytes.length - 22; offset >= Math.max(0, bytes.length - 22 - 0xffff); offset--) {
+    if (view.getUint32(offset, true) === 0x06054b50) {
+      eocd = offset;
+      break;
+    }
+  }
+  if (eocd === -1) return [];
+  const names: string[] = [];
+  let position = view.getUint32(eocd + 16, true);
+  const decoder = new TextDecoder('latin1');
+  while (names.length < limit && position + 46 <= bytes.length && view.getUint32(position, true) === 0x02014b50) {
+    const nameLength = view.getUint16(position + 28, true);
+    names.push(decoder.decode(bytes.subarray(position + 46, position + 46 + nameLength)));
+    position += 46 + nameLength + view.getUint16(position + 30, true) + view.getUint16(position + 32, true);
+  }
+  return names;
+}
+
+/**
+ * Many document formats are ZIPs. OOXML files are told apart by their main
+ * part; OpenDocument and EPUB files store their MIME type as the first,
+ * uncompressed entry. The directory is read properly, because a deck that
+ * embeds a workbook contains the bytes "xl/workbook" without being one.
+ */
+function sniffZipKind(bytes: Uint8Array): string | undefined {
+  const start = new TextDecoder('latin1').decode(bytes.subarray(0, 160));
+  if (start.includes('mimetypeapplication/epub+zip')) return 'epub';
+  const open = /mimetypeapplication\/vnd\.oasis\.opendocument\.(text|spreadsheet|presentation)/.exec(start);
+  if (open) return { text: 'odt', spreadsheet: 'ods', presentation: 'odp' }[open[1]!];
+
+  const names = zipEntryNames(bytes);
+  const has = (name: string) => names.includes(name);
+  if (has('word/document.xml')) return 'docx';
+  if (has('xl/workbook.xml')) return 'xlsx';
+  if (has('ppt/presentation.xml')) return 'pptx';
+  // Writers may name the main part differently; fall back to the folder.
+  for (const [prefix, kind] of [['word/', 'docx'], ['xl/', 'xlsx'], ['ppt/', 'pptx']] as const) {
+    if (names.some((name) => name.startsWith(prefix))) return kind;
   }
   return undefined;
 }

@@ -6,6 +6,8 @@ export type FormatCategory =
   | 'video'
   | 'audio'
   | 'text'
+  | 'font'
+  | 'email'
   | 'archive'
   | 'binary';
 
@@ -88,6 +90,23 @@ export const FORMATS: readonly FormatInfo[] = [
   ),
   f('text', 'Plain text', 'text', 'text/plain', ['txt', 'text', 'log']),
 
+  f('ipynb', 'Jupyter notebook', 'text', 'application/x-ipynb+json', ['ipynb']),
+  f('rtf', 'Rich Text document', 'document', 'application/rtf', ['rtf'], ['text/rtf']),
+  f('odt', 'OpenDocument text', 'document', 'application/vnd.oasis.opendocument.text', ['odt']),
+  f('ods', 'OpenDocument spreadsheet', 'spreadsheet', 'application/vnd.oasis.opendocument.spreadsheet', ['ods']),
+  f('odp', 'OpenDocument presentation', 'presentation', 'application/vnd.oasis.opendocument.presentation', ['odp']),
+  f('epub', 'EPUB book', 'document', 'application/epub+zip', ['epub']),
+  f('eml', 'Email message', 'email', 'message/rfc822', ['eml']),
+
+  f('ttf', 'TrueType font', 'font', 'font/ttf', ['ttf'], ['application/x-font-ttf', 'font/sfnt']),
+  f('otf', 'OpenType font', 'font', 'font/otf', ['otf'], ['application/x-font-otf']),
+  f('woff', 'WOFF font', 'font', 'font/woff', ['woff'], ['application/font-woff']),
+  f('woff2', 'WOFF2 font', 'font', 'font/woff2', ['woff2']),
+
+  f('gzip', 'Gzip archive', 'archive', 'application/gzip', ['gz', 'tgz'], ['application/x-gzip']),
+  f('tar', 'Tar archive', 'archive', 'application/x-tar', ['tar']),
+  f('7z', '7-Zip archive', 'archive', 'application/x-7z-compressed', ['7z']),
+  f('rar', 'RAR archive', 'archive', 'application/vnd.rar', ['rar'], ['application/x-rar-compressed']),
   f('zip', 'ZIP archive', 'archive', 'application/zip', ['zip'], ['application/x-zip-compressed']),
   f('binary', 'Unknown file', 'binary', 'application/octet-stream', []),
 ];

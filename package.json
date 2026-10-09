@@ -11,8 +11,8 @@
     "dev": "pnpm --filter playground dev",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p playground/tsconfig.json && tsc --noEmit -p site/tsconfig.json",
-    "site": "pnpm --filter site dev",
-    "site:build": "pnpm --filter site build"
+    "site": "pnpm build && pnpm --filter site dev",
+    "site:build": "pnpm build && pnpm --filter site build"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

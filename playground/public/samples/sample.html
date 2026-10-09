@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sample page</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 34rem; margin: 3rem auto; padding: 0 1rem; line-height: 1.6; color: #1d2433; }
+  h1 { color: #2f4bff; }
+  .box { background: #fff7dc; border-left: 4px solid #ffc83d; padding: .75rem 1rem; }
+</style>
+</head>
+<body>
+<h1>A sample HTML page</h1>
+<p>This page is shown inside a sandboxed frame. Its styles apply, but its scripts do not run and it cannot load anything from the network.</p>
+<p class="box" id="target">If the script below had run, this box would say so.</p>
+<script>document.getElementById('target').textContent = 'The script ran. It should not have.';</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "name": "@omnifile/pptx",
+  "version": "0.0.0",
+  "description": "omnifile plugin: PowerPoint presentations (.pptx), rendered with PptxViewJS.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YakovMallah/omnifile.git",
+    "directory": "packages/pptx"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./frame": "./dist/frame.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsup"
+  },
+  "dependencies": {
+    "@omnifile/core": "workspace:^",
+    "chart.js": "^4.4.1",
+    "jszip": "^3.10.1",
+    "pptxviewjs": "^1.1.9"
+  }
+}

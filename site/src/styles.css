@@ -552,6 +552,38 @@ tr[data-ready] .status-dot {
   border-color: var(--cobalt);
 }
 
+/* ----------------------------------------------------------- isolation */
+
+.isolation-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+
+.probe {
+  margin: 0;
+}
+
+.probe-live {
+  height: 279px;
+  border: 1.5px solid var(--ink);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.probe figcaption {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+.isolation-notes {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 /* -------------------------------------------------------------- design */
 
 .principles {
@@ -616,6 +648,7 @@ tr[data-ready] .status-dot {
 
 @media (max-width: 960px) {
   .hero,
+  .isolation-grid,
   .usage-grid,
   .plugin-example,
   .install-grid {
@@ -661,7 +694,8 @@ tr[data-ready] .status-dot {
     font-size: 0.64rem;
   }
 
-  .masthead nav a:nth-child(3) {
+  .masthead nav a:nth-child(3),
+  .masthead nav a:nth-child(4) {
     display: none;
   }
 }

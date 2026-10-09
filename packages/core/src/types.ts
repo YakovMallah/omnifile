@@ -45,10 +45,19 @@ export interface ZoomControl {
   max: number;
 }
 
+/** Alternative presentations of one file, such as rendered and source. */
+export interface ViewControl {
+  options: readonly { id: string; label: string }[];
+  get(): string;
+  set(id: string): void;
+}
+
 export interface RenderHandle {
   destroy(): void;
   /** Present when the rendered content can be zoomed from the toolbar. */
   zoom?: ZoomControl;
+  /** Present when the file can be shown in more than one way. */
+  views?: ViewControl;
 }
 
 /**
@@ -74,9 +83,21 @@ export interface PluginImplementation<TModel = unknown> {
  */
 export interface OmniPlugin<TModel = unknown> {
   id: string;
-  /** Format ids this plugin handles, see `FORMATS`. */
+  /** Format ids this plugin handles, see `FORMATS`. `'*'` marks a fallback. */
   formats: readonly string[];
   load(): Promise<PluginImplementation<TModel>>;
+  /**
+   * How to run this plugin inside an isolated frame, for `@omnifile/sandbox`.
+   * `url` points at a self-contained module whose default export is a
+   * function taking `options` and returning the implementation.
+   */
+  frame?: PluginFrame;
+}
+
+export interface PluginFrame {
+  url: string | (() => string);
+  /** Passed to the frame module; must survive `structuredClone`. */
+  options?: unknown;
 }
 
 /** A plugin of any model type, for registries and plugin lists. */

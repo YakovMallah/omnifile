@@ -1,0 +1,47 @@
+{
+  "name": "@omnifile/all",
+  "version": "0.0.0",
+  "description": "Every official omnifile plugin in one list.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YakovMallah/omnifile.git",
+    "directory": "packages/all"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsup"
+  },
+  "dependencies": {
+    "@omnifile/archive": "workspace:^",
+    "@omnifile/code": "workspace:^",
+    "@omnifile/core": "workspace:^",
+    "@omnifile/docx": "workspace:^",
+    "@omnifile/email": "workspace:^",
+    "@omnifile/font": "workspace:^",
+    "@omnifile/hex": "workspace:^",
+    "@omnifile/html": "workspace:^",
+    "@omnifile/image": "workspace:^",
+    "@omnifile/markdown": "workspace:^",
+    "@omnifile/media": "workspace:^",
+    "@omnifile/pdf": "workspace:^",
+    "@omnifile/pptx": "workspace:^",
+    "@omnifile/sheet": "workspace:^",
+    "@omnifile/text": "workspace:^"
+  }
+}

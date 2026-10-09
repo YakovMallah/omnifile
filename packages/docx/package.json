@@ -1,0 +1,35 @@
+{
+  "name": "@omnifile/docx",
+  "version": "0.0.0",
+  "description": "omnifile plugin: Word documents (.docx), rendered with docx-preview.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YakovMallah/omnifile.git",
+    "directory": "packages/docx"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./frame": "./dist/frame.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsup"
+  },
+  "dependencies": {
+    "@omnifile/core": "workspace:^",
+    "docx-preview": "^0.4.1"
+  }
+}

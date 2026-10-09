@@ -1,12 +1,13 @@
 import { useMemo, useState, type DragEvent } from 'react';
 import { OmniFile, type OmniSource } from '@omnifile/react';
-import { image } from '@omnifile/image';
-import { media } from '@omnifile/media';
-import { pdf } from '@omnifile/pdf';
-import { text } from '@omnifile/text';
+import { allPlugins } from '@omnifile/all';
 import workerSrc from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 
-const SAMPLES = ['sample.pdf', 'sample.png', 'sample.svg', 'sample.md', 'sample.json', 'sample.docx'];
+const SAMPLES = [
+  'sample.pdf', 'sample.docx', 'sample.xlsx', 'sample.pptx', 'sample.csv', 'sample.md',
+  'sample.py', 'sample.json', 'sample.html', 'sample.png', 'sample.svg', 'sample.eml',
+  'sample.zip', 'sample.woff2', 'sample.bin',
+];
 
 // `?mainthread` exercises the PDF plugin's zero-configuration fallback.
 const useWorker = !new URLSearchParams(location.search).has('mainthread');
@@ -16,7 +17,7 @@ export function App() {
   const [status, setStatus] = useState('');
   const [dragging, setDragging] = useState(false);
   const plugins = useMemo(
-    () => [image(), media(), text(), pdf(useWorker ? { workerSrc } : {})],
+    () => allPlugins({ pdf: useWorker ? { workerSrc } : {} }),
     [],
   );
 

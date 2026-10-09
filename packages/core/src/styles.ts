@@ -5,7 +5,7 @@ const STYLE_ID = 'omnifile-styles';
  * `.omnifile`, so a host app themes it by overriding those, and all rules sit
  * in a cascade layer so any host CSS wins without specificity fights.
  */
-const CSS = `
+export const SHELL_CSS = `
 @layer omnifile {
   .omnifile {
     --omnifile-bg: #f3f4f6;
@@ -65,6 +65,9 @@ const CSS = `
   .omnifile-meta { color: var(--omnifile-muted); white-space: nowrap; font-size: 12px; }
   .omnifile-spacer { flex: 1; }
   .omnifile-zoom { display: flex; align-items: center; gap: 2px; }
+  .omnifile-views { display: flex; border: 1px solid var(--omnifile-border); border-radius: 6px; overflow: hidden; }
+  .omnifile-views .omnifile-button { border-radius: 0; border: 0; height: 28px; font-size: 13px; }
+  .omnifile-views .omnifile-button[aria-pressed="true"] { background: var(--omnifile-text); color: var(--omnifile-surface); }
   .omnifile-zoom-value { min-width: 46px; text-align: center; font-variant-numeric: tabular-nums; font-size: 12px; }
   .omnifile-button {
     appearance: none;
@@ -115,10 +118,22 @@ const CSS = `
 }
 `;
 
+/** The custom properties a host can set on `.omnifile` to theme the viewer. */
+export const THEME_VARIABLES = [
+  '--omnifile-bg',
+  '--omnifile-surface',
+  '--omnifile-text',
+  '--omnifile-muted',
+  '--omnifile-border',
+  '--omnifile-accent',
+  '--omnifile-font',
+  '--omnifile-mono',
+] as const;
+
 export function injectStyles(doc: Document): void {
   if (doc.getElementById(STYLE_ID)) return;
   const style = doc.createElement('style');
   style.id = STYLE_ID;
-  style.textContent = CSS;
+  style.textContent = SHELL_CSS;
   doc.head.appendChild(style);
 }

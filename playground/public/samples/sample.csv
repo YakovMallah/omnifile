@@ -1,0 +1,211 @@
+city,country,population,area_km2,note
+Tokyo,Japan,37400068,13452,largest metro area
+Delhi,India,28514000,2233,
+Shanghai,China,25582000,4015,
+São Paulo,Brazil,21650000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21581000,1485,
+Cairo,Egypt,20076000,3085,
+Tel Aviv,Israel,4400000,1516,metro area
+Tokyo,Japan,37401068,13452,largest metro area
+Delhi,India,28515000,2233,
+Shanghai,China,25583000,4015,
+São Paulo,Brazil,21651000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21582000,1485,
+Cairo,Egypt,20077000,3085,
+Tel Aviv,Israel,4401000,1516,metro area
+Tokyo,Japan,37402068,13452,largest metro area
+Delhi,India,28516000,2233,
+Shanghai,China,25584000,4015,
+São Paulo,Brazil,21652000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21583000,1485,
+Cairo,Egypt,20078000,3085,
+Tel Aviv,Israel,4402000,1516,metro area
+Tokyo,Japan,37403068,13452,largest metro area
+Delhi,India,28517000,2233,
+Shanghai,China,25585000,4015,
+São Paulo,Brazil,21653000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21584000,1485,
+Cairo,Egypt,20079000,3085,
+Tel Aviv,Israel,4403000,1516,metro area
+Tokyo,Japan,37404068,13452,largest metro area
+Delhi,India,28518000,2233,
+Shanghai,China,25586000,4015,
+São Paulo,Brazil,21654000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21585000,1485,
+Cairo,Egypt,20080000,3085,
+Tel Aviv,Israel,4404000,1516,metro area
+Tokyo,Japan,37405068,13452,largest metro area
+Delhi,India,28519000,2233,
+Shanghai,China,25587000,4015,
+São Paulo,Brazil,21655000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21586000,1485,
+Cairo,Egypt,20081000,3085,
+Tel Aviv,Israel,4405000,1516,metro area
+Tokyo,Japan,37406068,13452,largest metro area
+Delhi,India,28520000,2233,
+Shanghai,China,25588000,4015,
+São Paulo,Brazil,21656000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21587000,1485,
+Cairo,Egypt,20082000,3085,
+Tel Aviv,Israel,4406000,1516,metro area
+Tokyo,Japan,37407068,13452,largest metro area
+Delhi,India,28521000,2233,
+Shanghai,China,25589000,4015,
+São Paulo,Brazil,21657000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21588000,1485,
+Cairo,Egypt,20083000,3085,
+Tel Aviv,Israel,4407000,1516,metro area
+Tokyo,Japan,37408068,13452,largest metro area
+Delhi,India,28522000,2233,
+Shanghai,China,25590000,4015,
+São Paulo,Brazil,21658000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21589000,1485,
+Cairo,Egypt,20084000,3085,
+Tel Aviv,Israel,4408000,1516,metro area
+Tokyo,Japan,37409068,13452,largest metro area
+Delhi,India,28523000,2233,
+Shanghai,China,25591000,4015,
+São Paulo,Brazil,21659000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21590000,1485,
+Cairo,Egypt,20085000,3085,
+Tel Aviv,Israel,4409000,1516,metro area
+Tokyo,Japan,37410068,13452,largest metro area
+Delhi,India,28524000,2233,
+Shanghai,China,25592000,4015,
+São Paulo,Brazil,21660000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21591000,1485,
+Cairo,Egypt,20086000,3085,
+Tel Aviv,Israel,4410000,1516,metro area
+Tokyo,Japan,37411068,13452,largest metro area
+Delhi,India,28525000,2233,
+Shanghai,China,25593000,4015,
+São Paulo,Brazil,21661000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21592000,1485,
+Cairo,Egypt,20087000,3085,
+Tel Aviv,Israel,4411000,1516,metro area
+Tokyo,Japan,37412068,13452,largest metro area
+Delhi,India,28526000,2233,
+Shanghai,China,25594000,4015,
+São Paulo,Brazil,21662000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21593000,1485,
+Cairo,Egypt,20088000,3085,
+Tel Aviv,Israel,4412000,1516,metro area
+Tokyo,Japan,37413068,13452,largest metro area
+Delhi,India,28527000,2233,
+Shanghai,China,25595000,4015,
+São Paulo,Brazil,21663000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21594000,1485,
+Cairo,Egypt,20089000,3085,
+Tel Aviv,Israel,4413000,1516,metro area
+Tokyo,Japan,37414068,13452,largest metro area
+Delhi,India,28528000,2233,
+Shanghai,China,25596000,4015,
+São Paulo,Brazil,21664000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21595000,1485,
+Cairo,Egypt,20090000,3085,
+Tel Aviv,Israel,4414000,1516,metro area
+Tokyo,Japan,37415068,13452,largest metro area
+Delhi,India,28529000,2233,
+Shanghai,China,25597000,4015,
+São Paulo,Brazil,21665000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21596000,1485,
+Cairo,Egypt,20091000,3085,
+Tel Aviv,Israel,4415000,1516,metro area
+Tokyo,Japan,37416068,13452,largest metro area
+Delhi,India,28530000,2233,
+Shanghai,China,25598000,4015,
+São Paulo,Brazil,21666000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21597000,1485,
+Cairo,Egypt,20092000,3085,
+Tel Aviv,Israel,4416000,1516,metro area
+Tokyo,Japan,37417068,13452,largest metro area
+Delhi,India,28531000,2233,
+Shanghai,China,25599000,4015,
+São Paulo,Brazil,21667000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21598000,1485,
+Cairo,Egypt,20093000,3085,
+Tel Aviv,Israel,4417000,1516,metro area
+Tokyo,Japan,37418068,13452,largest metro area
+Delhi,India,28532000,2233,
+Shanghai,China,25600000,4015,
+São Paulo,Brazil,21668000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21599000,1485,
+Cairo,Egypt,20094000,3085,
+Tel Aviv,Israel,4418000,1516,metro area
+Tokyo,Japan,37419068,13452,largest metro area
+Delhi,India,28533000,2233,
+Shanghai,China,25601000,4015,
+São Paulo,Brazil,21669000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21600000,1485,
+Cairo,Egypt,20095000,3085,
+Tel Aviv,Israel,4419000,1516,metro area
+Tokyo,Japan,37420068,13452,largest metro area
+Delhi,India,28534000,2233,
+Shanghai,China,25602000,4015,
+São Paulo,Brazil,21670000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21601000,1485,
+Cairo,Egypt,20096000,3085,
+Tel Aviv,Israel,4420000,1516,metro area
+Tokyo,Japan,37421068,13452,largest metro area
+Delhi,India,28535000,2233,
+Shanghai,China,25603000,4015,
+São Paulo,Brazil,21671000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21602000,1485,
+Cairo,Egypt,20097000,3085,
+Tel Aviv,Israel,4421000,1516,metro area
+Tokyo,Japan,37422068,13452,largest metro area
+Delhi,India,28536000,2233,
+Shanghai,China,25604000,4015,
+São Paulo,Brazil,21672000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21603000,1485,
+Cairo,Egypt,20098000,3085,
+Tel Aviv,Israel,4422000,1516,metro area
+Tokyo,Japan,37423068,13452,largest metro area
+Delhi,India,28537000,2233,
+Shanghai,China,25605000,4015,
+São Paulo,Brazil,21673000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21604000,1485,
+Cairo,Egypt,20099000,3085,
+Tel Aviv,Israel,4423000,1516,metro area
+Tokyo,Japan,37424068,13452,largest metro area
+Delhi,India,28538000,2233,
+Shanghai,China,25606000,4015,
+São Paulo,Brazil,21674000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21605000,1485,
+Cairo,Egypt,20100000,3085,
+Tel Aviv,Israel,4424000,1516,metro area
+Tokyo,Japan,37425068,13452,largest metro area
+Delhi,India,28539000,2233,
+Shanghai,China,25607000,4015,
+São Paulo,Brazil,21675000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21606000,1485,
+Cairo,Egypt,20101000,3085,
+Tel Aviv,Israel,4425000,1516,metro area
+Tokyo,Japan,37426068,13452,largest metro area
+Delhi,India,28540000,2233,
+Shanghai,China,25608000,4015,
+São Paulo,Brazil,21676000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21607000,1485,
+Cairo,Egypt,20102000,3085,
+Tel Aviv,Israel,4426000,1516,metro area
+Tokyo,Japan,37427068,13452,largest metro area
+Delhi,India,28541000,2233,
+Shanghai,China,25609000,4015,
+São Paulo,Brazil,21677000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21608000,1485,
+Cairo,Egypt,20103000,3085,
+Tel Aviv,Israel,4427000,1516,metro area
+Tokyo,Japan,37428068,13452,largest metro area
+Delhi,India,28542000,2233,
+Shanghai,China,25610000,4015,
+São Paulo,Brazil,21678000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21609000,1485,
+Cairo,Egypt,20104000,3085,
+Tel Aviv,Israel,4428000,1516,metro area
+Tokyo,Japan,37429068,13452,largest metro area
+Delhi,India,28543000,2233,
+Shanghai,China,25611000,4015,
+São Paulo,Brazil,21679000,7947,"""Sampa"", locally"
+Mexico City,Mexico,21610000,1485,
+Cairo,Egypt,20105000,3085,
+Tel Aviv,Israel,4429000,1516,metro area

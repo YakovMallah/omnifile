@@ -12,5 +12,6 @@ export function image(): OmniPlugin<ImageModel> {
     id: 'omnifile/image',
     formats: NATIVE_FORMATS,
     load: () => import('./impl').then((module) => module.implementation),
+    frame: { url: () => new URL('./frame.js', import.meta.url).href },
   });
 }

@@ -23,12 +23,52 @@ describe('detectFormat', () => {
     expect(id({ bytes: bytes('<?xml version="1.0"?>\n<svg xmlns="http://www.w3.org/2000/svg"/>') })).toBe('svg');
   });
 
+  /** A minimal ZIP: stored entries plus the central directory. */
+  const zip = (entries: [name: string, content: string][]) => {
+    const encode = (text: string) => [...new TextEncoder().encode(text)];
+    const u16 = (n: number) => [n & 0xff, n >> 8];
+    const u32 = (n: number) => [n & 0xff, (n >> 8) & 0xff, (n >> 16) & 0xff, (n >> 24) & 0xff];
+    const local: number[] = [];
+    const central: number[] = [];
+    for (const [name, content] of entries) {
+      const offset = local.length;
+      const data = encode(content);
+      const sizes = [...u32(0), ...u32(data.length), ...u32(data.length), ...u16(name.length), ...u16(0)];
+      local.push(0x50, 0x4b, 3, 4, ...u16(20), ...u16(0), ...u16(0), ...u32(0), ...sizes, ...encode(name), ...data);
+      central.push(0x50, 0x4b, 1, 2, ...u16(20), ...u16(20), ...u16(0), ...u16(0), ...u32(0), ...sizes,
+        ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(offset), ...encode(name));
+    }
+    const end = [0x50, 0x4b, 5, 6, ...u16(0), ...u16(0), ...u16(entries.length), ...u16(entries.length),
+      ...u32(central.length), ...u32(local.length), ...u16(0)];
+    return new Uint8Array([...local, ...central, ...end]);
+  };
+
   it('tells OOXML files apart by their ZIP entries', () => {
-    const zip = (entry: string) => bytes('PK', 3, 4, 20, 0, 0, 0, 8, 0, entry, 0, 0, 0);
-    expect(id({ bytes: zip('word/document.xml') })).toBe('docx');
-    expect(id({ bytes: zip('xl/workbook.xml') })).toBe('xlsx');
-    expect(id({ bytes: zip('ppt/presentation.xml') })).toBe('pptx');
-    expect(id({ bytes: zip('notes/readme.txt'), name: 'archive.zip' })).toBe('zip');
+    expect(id({ bytes: zip([['[Content_Types].xml', ''], ['word/document.xml', '<w/>']]) })).toBe('docx');
+    expect(id({ bytes: zip([['xl/workbook.xml', '<x/>']]) })).toBe('xlsx');
+    expect(id({ bytes: zip([['ppt/presentation.xml', '<p/>']]) })).toBe('pptx');
+    expect(id({ bytes: zip([['notes/readme.txt', 'hi']]), name: 'archive.zip' })).toBe('zip');
+  });
+
+  it('is not fooled by a workbook embedded in a presentation', () => {
+    const deck = zip([
+      ['ppt/presentation.xml', '<p/>'],
+      ['ppt/embeddings/chart.xlsx', 'PK.. xl/workbook.xml ..'],
+    ]);
+    expect(id({ bytes: deck, name: 'deck.pptx' })).toBe('pptx');
+  });
+
+  it('recognises OpenDocument, EPUB, fonts and other archives', () => {
+    const zipWithMime = (mime: string) => zip([['mimetype', mime]]);
+    expect(id({ bytes: zipWithMime('application/vnd.oasis.opendocument.spreadsheet') })).toBe('ods');
+    expect(id({ bytes: zipWithMime('application/vnd.oasis.opendocument.text') })).toBe('odt');
+    expect(id({ bytes: zipWithMime('application/epub+zip') })).toBe('epub');
+    expect(id({ bytes: bytes('OTTO', 0, 9, 0, 0, 0, 0, 0, 0) })).toBe('otf');
+    expect(id({ bytes: bytes('wOF2', 0, 1, 0, 0, 0, 0, 0, 0) })).toBe('woff2');
+    expect(id({ bytes: bytes(0, 1, 0, 0, 0, 12, 0, 0x80, 0, 3, 0, 0x40) })).toBe('ttf');
+    expect(id({ bytes: bytes(0x1f, 0x8b, 8, 0, 0, 0, 0, 0) })).toBe('gzip');
+    expect(id({ bytes: bytes('{\\rtf1\\ansi hello}') })).toBe('rtf');
+    expect(id({ bytes: bytes('From: a@example.com\nSubject: hi\n\nbody'), name: 'note.eml' })).toBe('eml');
   });
 
   it('uses the label to tell legacy Office files apart', () => {
@@ -70,6 +110,13 @@ describe('findPlugin', () => {
 
   it('returns undefined when nothing handles the format', () => {
     expect(findPlugin([plugin('a', ['png'])], getFormat('pdf'))).toBeUndefined();
+  });
+
+  it('uses a wildcard plugin only when nothing names the format', () => {
+    const plugins = [plugin('pdf', ['pdf']), plugin('hex', ['*'])];
+    expect(findPlugin(plugins, getFormat('pdf'))?.id).toBe('pdf');
+    expect(findPlugin(plugins, getFormat('binary'))?.id).toBe('hex');
+    expect(findPlugin([plugin('hex', ['*']), plugin('pdf', ['pdf'])], getFormat('pdf'))?.id).toBe('pdf');
   });
 
   it('lets a later plugin override an earlier one', () => {

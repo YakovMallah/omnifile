@@ -1,7 +1,7 @@
 import { loadSource } from './load';
 import { findPlugin } from './registry';
 import { injectStyles } from './styles';
-import type { AnyPlugin, LoadedFile, OmniMode, OmniSource, RenderHandle, ZoomControl } from './types';
+import type { AnyPlugin, LoadedFile, OmniMode, OmniSource, RenderHandle } from './types';
 
 export interface MountOptions {
   source: OmniSource;
@@ -74,11 +74,37 @@ export function mount(target: HTMLElement, options: MountOptions): OmniInstance 
     return link;
   };
 
-  const buildToolbar = (file: LoadedFile, zoom: ZoomControl | undefined) => {
+  const buildToolbar = (file: LoadedFile, rendered: RenderHandle | undefined) => {
+    const zoom = rendered?.zoom;
+    const views = rendered?.views;
     const name = el('span', 'omnifile-name', file.name);
     name.title = file.name;
     const meta = el('span', 'omnifile-meta', `${file.format.label} · ${formatSize(file.size)}`);
     const items: Node[] = [name, meta, el('span', 'omnifile-spacer')];
+
+    if (views && views.options.length > 1) {
+      const group = el('div', 'omnifile-views');
+      group.setAttribute('role', 'group');
+      group.setAttribute('aria-label', 'View');
+      const buttons = views.options.map((option) => {
+        const button = el('button', 'omnifile-button', option.label);
+        button.type = 'button';
+        button.addEventListener('click', () => {
+          views.set(option.id);
+          refresh();
+        });
+        return button;
+      });
+      const refresh = () => {
+        const current = views.get();
+        buttons.forEach((button, index) =>
+          button.setAttribute('aria-pressed', String(views.options[index]!.id === current)),
+        );
+      };
+      refresh();
+      group.append(...buttons);
+      items.push(group);
+    }
 
     if (zoom) {
       const group = el('div', 'omnifile-zoom');
@@ -151,7 +177,7 @@ export function mount(target: HTMLElement, options: MountOptions): OmniInstance 
     handle = rendered;
     root.dataset.format = file.format.id;
     root.dataset.plugin = plugin.id;
-    buildToolbar(file, rendered.zoom);
+    buildToolbar(file, rendered);
     options.onLoad?.({ file, plugin });
   };
 
