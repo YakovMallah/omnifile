@@ -22,7 +22,7 @@ no third-party viewer.
 | Code | js, ts, py, go, rs, json, yaml, css, ... | `@omnifile/code` | highlight.js colours, line numbers |
 | HTML | html | `@omnifile/html` | Previewed with scripts off and the network blocked; switch to source |
 | Email | eml | `@omnifile/email` | Headers, body, attachments; remote images blocked |
-| ZIP | zip | `@omnifile/archive` | Lists the contents without extracting |
+| ZIP | zip | `@omnifile/archive` | Folder tree like a file explorer; nothing is extracted |
 | Fonts | ttf, otf, woff, woff2 | `@omnifile/font` | A specimen you can type into |
 | Text | txt, log, anything text-like | `@omnifile/text` | Plain text with line numbers |
 | Anything else | any | `@omnifile/hex` | Hex view of the raw bytes |

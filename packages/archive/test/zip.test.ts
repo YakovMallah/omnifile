@@ -27,3 +27,39 @@ describe('readZipDirectory', () => {
     expect(() => readZipDirectory(strToU8('not a zip archive at all, just text'))).toThrow(/damaged/);
   });
 });
+
+describe('buildTree', () => {
+  const entry = (name: string, size = 0) => ({
+    name,
+    directory: name.endsWith('/'),
+    size,
+    compressedSize: Math.ceil(size / 2),
+    modified: undefined,
+    encrypted: false,
+  });
+
+  it('nests files under folders, creating folders that have no entry of their own', async () => {
+    const { buildTree } = await import('../src/tree');
+    const root = buildTree([
+      entry('src/app/main.ts', 100),
+      entry('src/app/util.ts', 50),
+      entry('src/index.ts', 10),
+      entry('README.md', 5),
+      entry('empty/'),
+    ]);
+    expect(root.children.map((node) => node.name)).toEqual(['empty', 'src', 'README.md']);
+    const src = root.children[1]!;
+    expect(src.children.map((node) => node.name)).toEqual(['app', 'index.ts']);
+    expect(src.children[0]!.children.map((node) => node.path)).toEqual(['src/app/main.ts', 'src/app/util.ts']);
+    expect(src).toMatchObject({ size: 160, compressedSize: 80, fileCount: 3, directory: true });
+    expect(root).toMatchObject({ size: 165, fileCount: 4 });
+    expect(root.children[0]).toMatchObject({ directory: true, fileCount: 0, children: [] });
+  });
+
+  it('sorts folders first and names naturally, and accepts backslashes', async () => {
+    const { buildTree } = await import('../src/tree');
+    const root = buildTree([entry('file10.txt', 1), entry('file2.txt', 1), entry('b\\inner.txt', 1), entry('./a/x.txt', 1)]);
+    expect(root.children.map((node) => node.name)).toEqual(['a', 'b', 'file2.txt', 'file10.txt']);
+    expect(root.children[1]!.children[0]!.path).toBe('b/inner.txt');
+  });
+});

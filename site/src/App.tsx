@@ -353,7 +353,7 @@ const FORMAT_ROWS: { family: string; types: string; how: string; ready: boolean 
   { family: 'Code', types: 'js, ts, py, go, rs, java, json, yaml, css and more', how: 'Syntax colours and line numbers', ready: true },
   { family: 'HTML', types: 'html', how: 'Previewed with scripts off, with a switch to the source', ready: true },
   { family: 'Email', types: 'eml', how: 'Headers, body and attachments; remote images blocked', ready: true },
-  { family: 'ZIP archives', types: 'zip', how: 'A list of the files inside', ready: true },
+  { family: 'ZIP archives', types: 'zip', how: 'A folder tree you can expand, like a file explorer', ready: true },
   { family: 'Fonts', types: 'ttf, otf, woff, woff2', how: 'A specimen you can type into', ready: true },
   { family: 'Plain text', types: 'txt, log and anything text-like', how: 'Text with line numbers', ready: true },
   { family: 'Everything else', types: 'any file', how: 'A hex view of the raw bytes', ready: true },

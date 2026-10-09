@@ -69,7 +69,7 @@ Editing is parked: the priority is viewing as many formats as possible.
 | XLSX, CSV, TSV | Own reader (fflate + DOMParser) and virtualised grid | Done (values and number formats; no cell styling, charts or images) |
 | PPTX | PptxViewJS (canvas) | Done (no animations or video) |
 | Email (.eml) | postal-mime | Done |
-| ZIP | Own central-directory reader | Done (listing only) |
+| ZIP | Own central-directory reader, folder tree | Done (browse only; opening a file inside is not built) |
 | Fonts | FontFace API | Done |
 | Anything else | Hex view fallback | Done |
 | HEIC, TIFF | Decoders | Planned. libheif-js is LGPL-3.0, so HEIC needs a licence decision |
