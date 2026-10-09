@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
-  "repository": { "type": "git", "url": "git+https://github.com/YakovMallah/filekit.git", "directory": "packages/image" },
+  "repository": { "type": "git", "url": "git+https://github.com/YakovMallah/omnifile.git", "directory": "packages/image" },
   "exports": {
     ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
   },

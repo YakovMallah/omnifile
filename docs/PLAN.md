@@ -101,4 +101,5 @@ the realistic route to full Office editing.
 Packages are `@omnifile/*`. On 2026-10-09 the unscoped `omnifile` name and
 `@omnifile/core` were unclaimed on npm, but the scope has not been registered
 yet; create the `omnifile` organisation on npm to secure it. The GitHub
-repository is still called `filekit`, a name that is taken on npm.
+repository was first called `filekit`, a name that is taken on npm, and was
+renamed to `omnifile` to match.

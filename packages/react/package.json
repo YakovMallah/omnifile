@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
-  "repository": { "type": "git", "url": "git+https://github.com/YakovMallah/filekit.git", "directory": "packages/react" },
+  "repository": { "type": "git", "url": "git+https://github.com/YakovMallah/omnifile.git", "directory": "packages/react" },
   "exports": {
     ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
   },
